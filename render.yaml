@@ -2,6 +2,7 @@ services:
   - type: web
     name: xeno-crm-backend
     env: node
+    plan: free
     region: singapore
     buildCommand: "cd crm-backend && npm install"
     startCommand: "cd crm-backend && npx tsx src/index.ts"
@@ -18,6 +19,7 @@ services:
   - type: web
     name: xeno-channel-service
     env: node
+    plan: free
     region: singapore
     buildCommand: "cd channel-service && npm install"
     startCommand: "cd channel-service && npx tsx src/index.ts"
