@@ -84,8 +84,8 @@ export function Copilot() {
       // 2. Launch Campaign
       await axios.post(`${API_URL}/campaigns/${campaignId}/send`);
       
-      // Navigate to Stats (We haven't built the Stats page yet, so redirect to Dashboard for now)
-      navigate('/');
+      // Navigate to Stats Dashboard
+      navigate(`/campaigns/${campaignId}`);
     } catch (err) {
       console.error(err);
       alert('Failed to launch campaign.');
