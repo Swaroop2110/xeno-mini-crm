@@ -8,6 +8,7 @@ import { seedRouter } from './routes/seed';
 import { segmentsRouter } from './routes/segments';
 import { receiptRouter } from './routes/receipt';
 import { campaignsRouter } from './routes/campaigns';
+import { copilotRouter } from './routes/copilot';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use('/api/seed', seedRouter);
 app.use('/api/segments', segmentsRouter);
 app.use('/api/receipt', receiptRouter);
 app.use('/api/campaigns', campaignsRouter);
+app.use('/api/copilot', copilotRouter);
 
 const startServer = async () => {
   if (process.env.MONGODB_URI) {
