@@ -5,6 +5,7 @@ import { Campaign } from '../models/Campaign';
 import { Customer } from '../models/Customer';
 import { Communication } from '../models/Communication';
 import { buildMongoQuery } from '../services/segmentService';
+import { analyzeCampaign } from '../services/geminiService';
 
 export const campaignsRouter = Router();
 
@@ -166,5 +167,33 @@ campaignsRouter.get('/:id/stats', async (req, res) => {
   } catch (error) {
     console.error('Stats aggregation error:', error);
     res.status(500).json({ error: 'Failed to aggregate campaign stats' });
+  }
+});
+
+// Endpoint: AI Campaign Analysis
+campaignsRouter.post('/:id/analyze', async (req, res) => {
+  try {
+    const campaignId = new mongoose.Types.ObjectId(req.params.id);
+    const campaign = await Campaign.findById(campaignId);
+    
+    if (!campaign) {
+      return res.status(404).json({ error: 'Campaign not found' });
+    }
+
+    const statusCounts = await Communication.aggregate([
+      { $match: { campaignId } },
+      { $group: { _id: '$status', count: { $sum: 1 } } }
+    ]);
+
+    const formattedStats = statusCounts.reduce((acc, curr) => {
+      acc[curr._id] = curr.count;
+      return acc;
+    }, {});
+
+    const analysis = await analyzeCampaign(campaign, formattedStats);
+    res.status(200).json({ analysis });
+  } catch (error) {
+    console.error('Campaign analysis error:', error);
+    res.status(500).json({ error: 'Failed to analyze campaign' });
   }
 });

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Activity, Mail, CheckCircle, Eye, MousePointerClick, AlertCircle } from 'lucide-react';
+import { Activity, Mail, CheckCircle, Eye, MousePointerClick, AlertCircle, Sparkles } from 'lucide-react';
 import './CampaignDetail.css';
 
 interface CampaignStats {
@@ -28,6 +28,8 @@ export function CampaignDetail() {
   const [stats, setStats] = useState<CampaignStats>({});
   const [failures, setFailures] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [analysis, setAnalysis] = useState<string | null>(null);
+  const [analyzing, setAnalyzing] = useState(false);
 
   const API_URL = 'http://localhost:3000/api';
 
@@ -75,6 +77,19 @@ export function CampaignDetail() {
     { name: 'Clicked', value: stats.clicked || 0, color: '#f59e0b' },
     { name: 'Failed', value: stats.failed || 0, color: '#ef4444' }
   ];
+
+  const handleAnalyze = async () => {
+    setAnalyzing(true);
+    try {
+      const res = await axios.post(`${API_URL}/campaigns/${id}/analyze`);
+      setAnalysis(res.data.analysis);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to analyze campaign');
+    } finally {
+      setAnalyzing(false);
+    }
+  };
 
   return (
     <div className="campaign-detail animate-fade-in">
@@ -159,6 +174,33 @@ export function CampaignDetail() {
             </div>
           </div>
         )}
+
+        <div className="analysis-card glass-panel" style={{ marginTop: '1.5rem', padding: '1.5rem', gridColumn: '1 / -1' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Sparkles size={20} color="#a78bfa" /> AI Campaign Analysis
+            </h3>
+            {!analysis && (
+              <button 
+                className="btn-primary" 
+                onClick={handleAnalyze} 
+                disabled={analyzing}
+                style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}
+              >
+                {analyzing ? 'Analyzing...' : 'Generate Analysis'}
+              </button>
+            )}
+          </div>
+          
+          {analysis && (
+            <div style={{ background: 'rgba(139, 92, 246, 0.1)', padding: '1.5rem', borderRadius: '8px', borderLeft: '4px solid #8b5cf6' }}>
+              <p style={{ lineHeight: '1.6', fontSize: '1.05rem' }}>{analysis}</p>
+            </div>
+          )}
+          {!analysis && !analyzing && (
+            <p className="text-secondary">Click the button to have Gemini analyze the final campaign metrics and generate an executive summary.</p>
+          )}
+        </div>
       </div>
     </div>
   );

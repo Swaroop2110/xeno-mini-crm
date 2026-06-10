@@ -67,19 +67,19 @@ Template concept/goal: "${template}"
 
 Customer Context:
 - Name: ${customer.name}
-- City: ${customer.city}
-- Total Spend: ${customer.totalSpend} INR
-- Order Count: ${customer.orderCount}
-- Churn Risk: ${customer.churnScore > 0.6 ? 'High' : 'Low'} (Score: ${customer.churnScore})
+export async function generateMessage(template: string, customer: any): Promise<string> {
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy_key');
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
-Constraints:
-- Keep it concise, engaging, and highly persuasive.
-- DO NOT use markdown.
-- Use the customer's name and reference their location or status if relevant.
-- Ensure the message directly aligns with the template concept.
+  const prompt = `
+  You are an expert marketer. Personalize this message template for a customer.
+  Template: "${template}"
+  Customer Name: ${customer.name}
+  Customer City: ${customer.city}
+  Total Spend: ${customer.totalSpend}
 
-Respond ONLY with the exact message text. No explanations.
-`;
+  Replace any placeholders (like {name}) and write the final short message to send. Return ONLY the message string.
+  `;
 
   try {
     const result = await model.generateContent(prompt);
@@ -88,4 +88,26 @@ Respond ONLY with the exact message text. No explanations.
     console.error('Gemini generateMessage error:', error);
     throw new Error('Failed to generate message using AI');
   }
-};
+}
+
+export async function analyzeCampaign(campaign: any, stats: any): Promise<string> {
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy_key');
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+
+  const prompt = `
+  You are a Data Analyst for Xeno CRM. Analyze these campaign results and write a short, 2-sentence executive summary.
+  
+  Campaign Goal: ${campaign.goal}
+  Channel: ${campaign.channel}
+  Sent: ${stats.sent || 0}
+  Delivered: ${stats.delivered || 0}
+  Opened: ${stats.opened || 0}
+  Clicked: ${stats.clicked || 0}
+  Failed: ${stats.failed || 0}
+
+  Return ONLY the 2-sentence summary paragraph. Be professional but insightful (e.g. mention conversion rates if applicable).
+  `;
+
+  const result = await model.generateContent(prompt);
+  return result.response.text().trim();
+}
