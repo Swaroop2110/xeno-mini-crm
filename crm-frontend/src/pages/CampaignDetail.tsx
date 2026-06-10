@@ -31,7 +31,7 @@ export function CampaignDetail() {
   const [analysis, setAnalysis] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
 
-  const API_URL = 'http://localhost:3000/api';
+  const API_URL = import.meta.env.VITE_API_URL || 'https://xeno-crm-backend-cn6a.onrender.com/api';
 
   useEffect(() => {
     // 1. Fetch Campaign Info

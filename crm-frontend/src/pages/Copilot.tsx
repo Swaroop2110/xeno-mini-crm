@@ -15,7 +15,7 @@ export function Copilot() {
   const [audienceSize, setAudienceSize] = useState(0);
   const [message, setMessage] = useState('');
 
-  const API_URL = 'http://localhost:3000/api'; // Local dev
+  const API_URL = import.meta.env.VITE_API_URL || 'https://xeno-crm-backend-cn6a.onrender.com/api';
 
   const handleParseGoal = async () => {
     if (!goal.trim()) return;

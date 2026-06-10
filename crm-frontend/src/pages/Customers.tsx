@@ -22,7 +22,7 @@ export function Customers() {
     // In dev, use local backend, in prod use render URL. For now, we assume local dev.
     const fetchCustomers = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/segments/customers');
+        const res = await axios.get('https://xeno-crm-backend-cn6a.onrender.com/api/segments/customers');
         setCustomers(res.data.customers);
       } catch (err) {
         console.error(err);
