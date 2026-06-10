@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import mongoose from 'mongoose';
 import axios from 'axios';
 import { Campaign } from '../models/Campaign';
 import { Customer } from '../models/Customer';
@@ -129,5 +130,41 @@ campaignsRouter.get('/:id', async (req, res) => {
     res.status(200).json(campaign);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch campaign' });
+  }
+});
+
+// Endpoint: Deep Campaign Stats (Aggregation Query)
+campaignsRouter.get('/:id/stats', async (req, res) => {
+  try {
+    const campaignId = new mongoose.Types.ObjectId(req.params.id);
+    
+    // Aggregation 1: Count communications by status
+    const statusCounts = await Communication.aggregate([
+      { $match: { campaignId } },
+      { $group: { _id: '$status', count: { $sum: 1 } } }
+    ]);
+
+    // Aggregation 2: Get recent failures for the marketer to review
+    const recentFailures = await Communication.find({ 
+      campaignId, 
+      status: 'failed' 
+    })
+    .sort({ updatedAt: -1 })
+    .limit(10)
+    .populate('customerId', 'name city email'); // Populate basic customer details
+
+    // Convert array of { _id: "sent", count: 5 } to an object { sent: 5 }
+    const formattedStats = statusCounts.reduce((acc, curr) => {
+      acc[curr._id] = curr.count;
+      return acc;
+    }, {});
+
+    res.status(200).json({
+      breakdown: formattedStats,
+      recentFailures
+    });
+  } catch (error) {
+    console.error('Stats aggregation error:', error);
+    res.status(500).json({ error: 'Failed to aggregate campaign stats' });
   }
 });
