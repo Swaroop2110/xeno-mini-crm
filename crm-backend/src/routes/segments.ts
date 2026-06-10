@@ -26,3 +26,30 @@ segmentsRouter.post('/preview', async (req, res) => {
     res.status(500).json({ error: 'Failed to preview segment' });
   }
 });
+
+// Endpoint: GET /api/segments/customers
+// Returns all customers in the database (with basic pagination)
+segmentsRouter.get('/customers', async (req, res) => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 50;
+    const skip = (page - 1) * limit;
+
+    const customers = await Customer.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+      
+    const total = await Customer.countDocuments();
+
+    res.status(200).json({
+      customers,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit)
+    });
+  } catch (error) {
+    console.error('Fetch customers error:', error);
+    res.status(500).json({ error: 'Failed to fetch customers' });
+  }
+});
