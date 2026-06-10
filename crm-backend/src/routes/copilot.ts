@@ -15,6 +15,9 @@ copilotRouter.post('/parse-goal', async (req, res) => {
     res.status(200).json(parsedData);
   } catch (error) {
     console.error('Copilot parse goal error:', error);
-    res.status(500).json({ error: 'AI failed to process the goal' });
+    res.status(500).json({ 
+      error: 'AI failed to process the goal',
+      details: error instanceof Error ? error.message : String(error)
+    });
   }
 });
