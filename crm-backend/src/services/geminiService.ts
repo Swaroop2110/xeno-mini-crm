@@ -52,3 +52,40 @@ Respond ONLY with valid JSON, no markdown, no explanation:
     throw new Error('Failed to parse goal using AI');
   }
 };
+
+/**
+ * Generates a personalized message using AI based on customer context.
+ */
+export const generateMessage = async (template: string, customer: any) => {
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy_key');
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+
+  const prompt = `
+You are a highly skilled marketing copywriter.
+Write a personalized marketing message for this customer.
+Template concept/goal: "${template}"
+
+Customer Context:
+- Name: ${customer.name}
+- City: ${customer.city}
+- Total Spend: ${customer.totalSpend} INR
+- Order Count: ${customer.orderCount}
+- Churn Risk: ${customer.churnScore > 0.6 ? 'High' : 'Low'} (Score: ${customer.churnScore})
+
+Constraints:
+- Keep it concise, engaging, and highly persuasive.
+- DO NOT use markdown.
+- Use the customer's name and reference their location or status if relevant.
+- Ensure the message directly aligns with the template concept.
+
+Respond ONLY with the exact message text. No explanations.
+`;
+
+  try {
+    const result = await model.generateContent(prompt);
+    return result.response.text().trim();
+  } catch (error) {
+    console.error('Gemini generateMessage error:', error);
+    throw new Error('Failed to generate message using AI');
+  }
+};
