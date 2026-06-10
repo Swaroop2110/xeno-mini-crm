@@ -17,11 +17,11 @@ campaignsRouter.post('/', async (req, res) => {
     const { name, goal, segment, channel, messageTemplate } = req.body;
     
     const campaign = new Campaign({
-      name,
+      name: name || 'AI Campaign',
       goal,
       segment,
-      channel,
-      messageTemplate,
+      channel: channel ? channel.toLowerCase() : 'email',
+      messageTemplate: messageTemplate || 'Special Offer for you!',
       status: 'draft'
     });
 
