@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, Sparkles, BarChart3 } from 'lucide-react';
+import { LayoutDashboard, Users, Sparkles, Network } from 'lucide-react';
 import './Sidebar.css';
 
 export function Sidebar() {
@@ -22,9 +22,11 @@ export function Sidebar() {
           <span>Audience</span>
         </NavLink>
         
-        <NavLink to="/copilot" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>
-          <Sparkles size={20} />
-          <span>AI Copilot</span>
+        <NavLink to="/copilot" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+          <Sparkles size={20} /> AI Copilot
+        </NavLink>
+        <NavLink to="/architecture" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+          <Network size={20} /> Architecture
         </NavLink>
       </nav>
     </div>

@@ -4,6 +4,7 @@ import { Sidebar } from './components/Sidebar';
 import { Customers } from './pages/Customers';
 import { Copilot } from './pages/Copilot';
 import { CampaignDetail } from './pages/CampaignDetail';
+import { Architecture } from './pages/Architecture';
 
 // Temporary placeholder pages
 const Dashboard = () => <div className="animate-fade-in"><h1>Dashboard</h1><p>Welcome to Xeno CRM</p></div>;
@@ -19,6 +20,7 @@ function App() {
             <Route path="/customers" element={<Customers />} />
             <Route path="/copilot" element={<Copilot />} />
             <Route path="/campaigns/:id" element={<CampaignDetail />} />
+            <Route path="/architecture" element={<Architecture />} />
           </Routes>
         </main>
       </div>
