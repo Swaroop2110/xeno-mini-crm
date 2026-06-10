@@ -56,17 +56,6 @@ Respond ONLY with valid JSON, no markdown, no explanation:
 /**
  * Generates a personalized message using AI based on customer context.
  */
-export const generateMessage = async (template: string, customer: any) => {
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy_key');
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
-
-  const prompt = `
-You are a highly skilled marketing copywriter.
-Write a personalized marketing message for this customer.
-Template concept/goal: "${template}"
-
-Customer Context:
-- Name: ${customer.name}
 export async function generateMessage(template: string, customer: any): Promise<string> {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy_key');
   const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
