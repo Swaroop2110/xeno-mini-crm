@@ -1,13 +1,9 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy_key');
-const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
-
-/**
- * Parses a natural language goal from a marketer into structured JSON filters.
- * SIGNAL: This prompt extracts intent and safely maps it to our exact database schema boundaries.
- */
 export const parseGoal = async (goal: string) => {
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy_key');
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+
   const prompt = `
 You are an AI assistant for a marketing CRM.
 A marketer has described a campaign goal.
