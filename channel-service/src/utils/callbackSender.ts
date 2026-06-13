@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ReceiptPayload } from '../queue/types';
 
-const CRM_RECEIPT_URL = process.env.CRM_RECEIPT_URL || 'http://localhost:3000/api/receipt';
+const CRM_RECEIPT_URL = process.env.CRM_RECEIPT_URL || 'https://xeno-crm-backend-cn6a.onrender.com/api/receipt';
 
 const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 

@@ -9,7 +9,7 @@ import { analyzeCampaign } from '../services/geminiService';
 
 export const campaignsRouter = Router();
 
-const CHANNEL_SERVICE_URL = process.env.CHANNEL_SERVICE_URL || 'http://localhost:3001';
+const CHANNEL_SERVICE_URL = process.env.CHANNEL_SERVICE_URL || 'https://xeno-channel-service-ua95.onrender.com';
 
 // Endpoint: Create a draft campaign
 campaignsRouter.post('/', async (req, res) => {
