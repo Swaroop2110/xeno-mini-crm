@@ -34,9 +34,8 @@ const communicationSchema = new Schema<ICommunication>({
 });
 
 // Update the updatedAt timestamp before saving
-communicationSchema.pre('save', function(next) {
+communicationSchema.pre('save', function() {
   this.updatedAt = new Date();
-  next();
 });
 
 // Indexes for fast lookups
