@@ -84,11 +84,11 @@ campaignsRouter.post('/:id/send', async (req, res) => {
     // We do NOT update stats here. The channel service will call our webhook for every state change.
     await campaign.save();
 
-    // 5. Dispatch to channel service
     const dispatchPayload = {
       campaignId: campaign._id,
       communications: insertedComms.map(c => ({
         communicationId: c._id,
+        campaignId: c.campaignId,
         customerId: c.customerId,
         channel: c.channel,
         message: c.message
